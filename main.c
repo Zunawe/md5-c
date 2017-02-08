@@ -6,8 +6,8 @@
 
 int main(int argc, char *argv[]){
 	if(argc < 2){
-		perror("Requires an argument string");
-		exit(1);
+		printf("Usage: ./md5 [STRING]\n");
+		return 0;
 	}
 
 	MD5Context ctx;
