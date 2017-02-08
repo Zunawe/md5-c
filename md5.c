@@ -8,12 +8,12 @@ uint32_t B = 0xefcdab89;
 uint32_t C = 0x98badcfe;
 uint32_t D = 0x10325476;
 
-uint32_t s[] = {7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22,
+static uint32_t s[] = {7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22,
 				5,  9, 14, 20, 5,  9, 14, 20, 5,  9, 14, 20, 5,  9, 14, 20,
 				4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23,
 				6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21};
 
-uint32_t K[] = {0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
+static uint32_t K[] = {0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
 				0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
 				0x698098d8, 0x8b44f7af, 0xffff5bb1, 0x895cd7be,
 				0x6b901122, 0xfd987193, 0xa679438e, 0x49b40821,
@@ -30,6 +30,36 @@ uint32_t K[] = {0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
 				0x6fa87e4f, 0xfe2ce6e0, 0xa3014314, 0x4e0811a1,
 				0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391};
 
+void md5Init(MD5Context *ctx){
+	ctx->size = (uint64_t)0;
+
+	//memset(ctx->input, 0, 64);
+
+	ctx->buffer[0] = (uint32_t)A;
+	ctx->buffer[1] = (uint32_t)B;
+	ctx->buffer[2] = (uint32_t)C;
+	ctx->buffer[3] = (uint32_t)D;
+}
+
+void md5Update(MD5Context *ctx, uint8_t *input, size_t input_len){
+	unsigned int offset = ctx->size % 64;
+	ctx->size += (uint64_t)input_len;
+
+	for(unsigned int i = 0; i < input_len; ++i){
+		ctx->input[offset++] = (uint8_t)*(input + i);
+
+		if(offset % 64 == 0){
+			for(unsigned int j = 0; j < 4; ++j){
+				ctx->input[j] = reverse_bytes((uint32_t)input[j * 4]);
+			}
+			offset = 0;
+		}
+	}
+}
+
+void md5Finalize(MD5Context *ctx){
+
+}
 
 /*
  * Uses MD5 algorithm to hash a string.
@@ -149,6 +179,13 @@ uint32_t rotate_left(uint32_t x, uint32_t n){
 /*
  * Reorders the bytes
  */
+uint32_t reverse_bytes(uint32_t word){
+	return ((word & 0xFF000000) >> 24) |
+	       ((word & 0x00FF0000) >>  8) |
+	       ((word & 0x0000FF00) <<  8) |
+	       ((word & 0x000000FF) << 24);
+}
+
 void decode(uint32_t *output, unsigned char *input, size_t length){
 	for(unsigned int i = 0, j = 0; j < length; ++i, j += 4){
 		output[i] = ((uint32_t)input[j] | ((uint32_t)input[j + 1] << 8) | ((uint32_t)input[j + 2] << 16) | ((uint32_t)input[j + 3] << 24));

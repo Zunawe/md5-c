@@ -17,4 +17,15 @@ uint32_t rotate_left(uint32_t x, uint32_t n);
 void print_bytes(uint8_t *location, size_t length);
 void print_hash(uint8_t *location);
 
-#define INPUT_BUFFER_SIZE 1024
+typedef struct{
+	uint64_t size;
+	uint32_t buffer[4];
+	uint8_t input[64];
+	uint8_t digest[16];
+}MD5Context;
+
+void md5Init(MD5Context *ctx);
+void md5Update(MD5Context *ctx, uint8_t *input, size_t input_len);
+void md5Finalize(MD5Context *ctx);
+
+uint32_t reverse_bytes(uint32_t word);
