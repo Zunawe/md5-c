@@ -4,25 +4,19 @@
 
 #include "md5.h"
 
-int main(void){
+int main(int argc, char *argv[]){
+	if(argc < 2){
+		perror("Requires an argument string");
+		exit(1);
+	}
+
 	MD5Context ctx;
+	uint8_t *input = (uint8_t *)argv[1];
 
 	md5Init(&ctx);
-	printf("%lu\n", ctx.size);
-	print_bytes(ctx.input, 64);
-	printf("\n");
-	print_bytes(ctx.buffer, 16);
-	printf("\n");
-
-	uint8_t *input = malloc(70);
-	memset(input, 0xAB, 35);
-	memset(input + 35, 0xCD, 35);
-	md5Update(&ctx, input, 70);
-	printf("%lu\n", ctx.size);
-	print_bytes(ctx.input, 64);
-	printf("\n");
-	print_bytes(ctx.buffer, 16);
-	printf("\n");
+	md5Update(&ctx, input, strlen(argv[1]));
+	md5Finalize(&ctx);
+	print_hash(ctx.digest);
 }
 
 /*int main(int argc, char *argv[]){
