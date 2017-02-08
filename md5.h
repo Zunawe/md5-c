@@ -2,7 +2,6 @@
 #include <stdint.h>
 #include <string.h>
 #include <stdlib.h>
-#include <stdio.h>
 
 uint8_t* md5(uint8_t *input);
 
@@ -17,3 +16,5 @@ uint32_t rotate_left(uint32_t x, uint32_t n);
 
 void print_bytes(uint8_t *location, size_t length);
 void print_hash(uint8_t *location);
+
+#define INPUT_BUFFER_SIZE 1024
