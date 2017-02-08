@@ -61,6 +61,10 @@ void md5Finalize(MD5Context *ctx){
 
 }
 
+void md5Step(uint32_t *buffer, uint8_t *input){
+
+}
+
 /*
  * Uses MD5 algorithm to hash a string.
  * Returns a pointer to 128 bits of the hash
