@@ -14,8 +14,8 @@ void decode(uint32_t *output, unsigned char *input, size_t length);
 
 uint32_t rotate_left(uint32_t x, uint32_t n);
 
-void print_bytes(uint8_t *location, size_t length);
-void print_hash(uint8_t *location);
+void print_bytes(void *p, size_t length);
+void print_hash(uint8_t *p);
 
 typedef struct{
 	uint64_t size;

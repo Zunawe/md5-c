@@ -52,6 +52,7 @@ void md5Update(MD5Context *ctx, uint8_t *input, size_t input_len){
 			for(unsigned int j = 0; j < 4; ++j){
 				ctx->input[j] = reverse_bytes((uint32_t)input[j * 4]);
 			}
+			md5Step(ctx->buffer, ctx->input);
 			offset = 0;
 		}
 	}
@@ -62,7 +63,46 @@ void md5Finalize(MD5Context *ctx){
 }
 
 void md5Step(uint32_t *buffer, uint8_t *input){
+	uint32_t A = buffer[0];
+	uint32_t B = buffer[1];
+	uint32_t C = buffer[2];
+	uint32_t D = buffer[3];
 
+	uint32_t E;
+
+	unsigned int j;
+
+	for(unsigned int i = 0; i < 64; ++i){
+		switch(i / 16){
+			case 0:
+				E = F(B, C, D);
+				j = i;
+				break;
+			case 1:
+				E = G(B, C, D);
+				j = ((i * 5) + 1) % 16;
+				break;
+			case 2:
+				E = H(B, C, D);
+				j = ((i * 3) + 5) % 16;
+				break;
+			default:
+				E = I(B, C, D);
+				j = (i * 7) % 16;
+				break;
+		}
+
+		uint32_t temp = D;
+		D = C;
+		C = B;
+		B = B + rotate_left(A + E + K[i] + input[j], s[i]);
+		A = temp;
+	}
+
+	buffer[0] += A;
+	buffer[1] += B;
+	buffer[2] += C;
+	buffer[3] += D;
 }
 
 /*
@@ -199,12 +239,13 @@ void decode(uint32_t *output, unsigned char *input, size_t length){
 /*
  * Printing bytes from buffers or the hash
  */
-void print_bytes(uint8_t *p, size_t length){
+void print_bytes(void *p, size_t length){
+	uint8_t *pp = (uint8_t *)p;
 	for(unsigned int i = 0; i < length; ++i){
 		if(i && !(i % 16)){
 			printf("\n");
 		}
-		printf("%02X ", p[i]);
+		printf("%02X ", pp[i]);
 	}
 	printf("\n");
 }
