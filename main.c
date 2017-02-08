@@ -6,17 +6,19 @@
 
 int main(int argc, char *argv[]){
 	if(argc < 2){
-		printf("Usage: ./md5 [STRING]\n");
+		printf("Usage: ./md5 [STRING] ...\n");
 		return 0;
 	}
 
-	MD5Context ctx;
-	uint8_t *input = (uint8_t *)argv[1];
+	for(int i = 1; i < argc; ++i){
+		MD5Context ctx;
+		uint8_t *input = (uint8_t *)argv[i];
 
-	md5Init(&ctx);
-	md5Update(&ctx, input, strlen(argv[1]));
-	md5Finalize(&ctx);
-	print_hash(ctx.digest);
+		md5Init(&ctx);
+		md5Update(&ctx, input, strlen(argv[i]));
+		md5Finalize(&ctx);
+		print_hash(ctx.digest);
+	}
 }
 
 /*int main(int argc, char *argv[]){
