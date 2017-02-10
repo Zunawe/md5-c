@@ -5,12 +5,16 @@
 #include "md5.h"
 
 int main(int argc, char *argv[]){
+	uint8_t *result;
 	if(argc > 1){
 		for(int i = 1; i < argc; ++i){
-			print_hash(md5String(argv[i]));
+			result = md5String(argv[i]);
+			print_hash(result);
 		}
 	}
 	else{
-		print_hash(md5File(stdin));
+		result = md5File(stdin);
 	}
+
+	free(result);
 }

@@ -193,6 +193,8 @@ uint8_t* md5File(FILE *file){
 
 	md5Finalize(&ctx);
 
+	free(input_buffer);
+
 	uint8_t *result = malloc(16);
 	memcpy(result, ctx.digest, 16);
 	return result;
