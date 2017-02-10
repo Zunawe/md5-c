@@ -169,6 +169,9 @@ void md5Step(uint32_t *buffer, uint32_t *input){
 	buffer[3] += DD;
 }
 
+/*
+ * Functions that will return a pointer to the hash of the provided input
+ */
 uint8_t* md5String(char *input){
 	MD5Context ctx;
 	md5Init(&ctx);

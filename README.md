@@ -67,6 +67,6 @@ void foo(){
 
 	md5Finalize(&ctx);
 
-	ctx.digest;											// => (Result of hashing as (uint8_t[16])
+	ctx.digest;											// => (Result of hashing (as uint8_t* with 16 bytes))
 }
 ```
