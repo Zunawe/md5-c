@@ -7,13 +7,7 @@
 int main(int argc, char *argv[]){
 	if(argc > 1){
 		for(int i = 1; i < argc; ++i){
-			MD5Context ctx;
-			uint8_t *input = (uint8_t *)argv[i];
-
-			md5Init(&ctx);
-			md5Update(&ctx, input, strlen(argv[i]));
-			md5Finalize(&ctx);
-			print_hash(ctx.digest);
+			print_hash(md5String(argv[i]));
 		}
 	}
 	else{

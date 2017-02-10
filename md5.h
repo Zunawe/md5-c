@@ -15,6 +15,8 @@ void md5Update(MD5Context *ctx, uint8_t *input, size_t input_len);
 void md5Finalize(MD5Context *ctx);
 void md5Step(uint32_t *buffer, uint32_t *input);
 
+uint8_t* md5String(char *input);
+
 uint32_t F(uint32_t X, uint32_t Y, uint32_t Z);
 uint32_t G(uint32_t X, uint32_t Y, uint32_t Z);
 uint32_t H(uint32_t X, uint32_t Y, uint32_t Z);

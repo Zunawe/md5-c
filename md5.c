@@ -169,6 +169,17 @@ void md5Step(uint32_t *buffer, uint32_t *input){
 	buffer[3] += DD;
 }
 
+uint8_t* md5String(char *input){
+	MD5Context ctx;
+	md5Init(&ctx);
+	md5Update(&ctx, (uint8_t *)input, strlen(input));
+	md5Finalize(&ctx);
+
+	uint8_t *result = malloc(16);
+	memcpy(result, ctx.digest, 16);
+	return result;
+}
+
 /*
  * Bit-manipulation functions defined by the MD5 algorithm
  */
