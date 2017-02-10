@@ -180,6 +180,24 @@ uint8_t* md5String(char *input){
 	return result;
 }
 
+uint8_t* md5File(FILE *file){
+	char *input_buffer = malloc(1024);
+	size_t input_size = 0;
+
+	MD5Context ctx;
+	md5Init(&ctx);
+
+	while((input_size = fread(input_buffer, 1, 1024, file)) > 0){
+		md5Update(&ctx, (uint8_t *)input_buffer, input_size);
+	}
+
+	md5Finalize(&ctx);
+
+	uint8_t *result = malloc(16);
+	memcpy(result, ctx.digest, 16);
+	return result;
+}
+
 /*
  * Bit-manipulation functions defined by the MD5 algorithm
  */
