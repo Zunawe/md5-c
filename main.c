@@ -14,6 +14,7 @@ int main(int argc, char *argv[]){
 	}
 	else{
 		result = md5File(stdin);
+		print_hash(result);
 	}
 
 	free(result);
