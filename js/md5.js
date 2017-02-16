@@ -3,10 +3,10 @@ const B0 = 0xefcdab89;
 const C0 = 0x98badcfe;
 const D0 = 0x10325476;
 
-const S = [ 7, 12, 17, 22,  7, 12, 17, 22,  7, 12, 17, 22,  7, 12, 17, 22,
-            5,  9, 14, 20,  5,  9, 14, 20,  5,  9, 14, 20,  5,  9, 14, 20,
-            4, 11, 16, 23,  4, 11, 16, 23,  4, 11, 16, 23,  4, 11, 16, 23,
-            6, 10, 15, 21,  6, 10, 15, 21,  6, 10, 15, 21,  6, 10, 15, 21];
+const S = [7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22, 7, 12, 17, 22,
+           5,  9, 14, 20, 5,  9, 14, 20, 5,  9, 14, 20, 5,  9, 14, 20,
+           4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23, 4, 11, 16, 23,
+           6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21, 6, 10, 15, 21];
 
 const K = [0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
            0xf57c0faf, 0x4787c62a, 0xa8304613, 0xfd469501,
@@ -35,28 +35,35 @@ const PADDING = [0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                  0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00];
 
 function md5(input){
+	// Always convert input to a string
 	input = input.toString();
 
+	// Initialize digest buffers
 	var A = A0;
 	var B = B0;
 	var C = C0;
 	var D = D0;
 
+	// Determine the size of the message in bytes
 	var inputBytes = [];
 	var size = input.length;
 	var paddingLength = size % 64 < 56 ? 56 - (size % 64) : (56 + 64) - (size % 64);
 
+	// Copy the number values of the characters into an array
 	for(var i = 0; i < input.length; ++i){
 		inputBytes[i] = input.charCodeAt(i);
 	}
 
+	// Pad the array to be congruent to 56 mod 64 (bytes)
 	for(var i = 0; i < paddingLength; ++i){
 		inputBytes[size + i] = PADDING[i];
 	}
 
+	// Separate the size in bits into two 32-bit unsigned integers
 	var sizeBitsLower = (size * 8) >>> 0;
 	var sizeBitsUpper = ((size * 8) / (Math.pow(2, 32))) >>> 0;
 
+	// Append the size in bits
 	inputBytes[size + paddingLength + 0] = (sizeBitsLower >>>  0) & 0xff;
 	inputBytes[size + paddingLength + 1] = (sizeBitsLower >>>  8) & 0xff;
 	inputBytes[size + paddingLength + 2] = (sizeBitsLower >>> 16) & 0xff;
@@ -67,12 +74,13 @@ function md5(input){
 	inputBytes[size + paddingLength + 7] = (sizeBitsUpper >>> 24) & 0xff;
 
 	for(var i = 0; i < (size + paddingLength) / 64; ++i){
+		// Turn the input into an array of words
 		var m = _getChunk(i, inputBytes);
 
-		var AA = A >>> 0;
-		var BB = B >>> 0;
-		var CC = C >>> 0;
-		var DD = D >>> 0;
+		var AA = A;
+		var BB = B;
+		var CC = C;
+		var DD = D;
 
 		var E;
 		var g;
@@ -121,6 +129,9 @@ function md5(input){
 	       _fillZeroesFront((D >>> 0)).toString(16);
 }
 
+/*
+ * Functions defined by the algorithm
+ */
 function _F(X, Y, Z){
 	return (X & Y) | (~X & Z);
 }
@@ -137,6 +148,9 @@ function _I(X, Y, Z){
 	return Y ^ (X | ~Z);
 }
 
+/*
+ * Rotates a word x left by n bits
+ */
 function _rotateLeft(x, n){
 	if(n != Math.floor(n) || n < 0){
 		throw 'Invalid argument (n): requires positive integer'
@@ -145,6 +159,9 @@ function _rotateLeft(x, n){
 	return ((x << n) | (x >>> (32 - n))) >>> 0;
 }
 
+/*
+ * Returns an array of words from chunk i of the provided message
+ */
 function _getChunk(i, message){
 	var m = [];
 	for(var j = 0; j < 16; ++j){
@@ -156,12 +173,26 @@ function _getChunk(i, message){
 	return m;
 }
 
+/*
+ * JavaScript saves all numbers as high-precision floating point numbers
+ * This function converts numbers to unsigned 32-bit integers, adds them,
+ * and converts the sum to an unsigned 32-bit integer
+ *
+ * The logical right shift (>>>) is the only operation in JavaScript that
+ * converts its arguments to unsigned 32-bit integers. Right shifting by
+ * zero doesn't change the number except to emulate the desired data type.
+ *
+ * This function takes any number of arguments and returns their collective sum.
+ */
 function _unsigned32Add(){
 	return Array.from(arguments).reduce(function (a, b){
-		return (((a >>> 0) + (b >>> 0)) & 0xffffffff) >>> 0;
+		return (((a >>> 0) + (b >>> 0))) >>> 0;
 	}, 0);
 }
 
+/*
+ * Reverse the bytes of a 32-bit word
+ */
 function _reverseBytes(n){
 	return (n & 0xff000000) >>> 24 |
 		   (n & 0x00ff0000) >>>  8 |
@@ -169,9 +200,15 @@ function _reverseBytes(n){
 		   (n & 0x000000ff) <<  24;
 }
 
+/*
+ * A workaround for the lack of a sprintf. Adds leading zeroes to a string
+ * until it is 8 characters long.
+ */
 function _fillZeroesFront(s){
 	while(s.length < 8){
 		s = '0' + s;
 	}
 	return s;
 }
+
+console.log(md5('test'));
