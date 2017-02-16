@@ -1,3 +1,4 @@
+# MD5 (C)
 Takes an input string or file and outputs its MD5 hash.
 
 ##Command Line Examples:
