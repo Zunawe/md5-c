@@ -210,5 +210,3 @@ function _fillZeroesFront(s){
 	}
 	return s;
 }
-
-console.log(md5('test'));
