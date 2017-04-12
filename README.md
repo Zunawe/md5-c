@@ -1,7 +1,7 @@
 # MD5
 Takes an input string or file and outputs its MD5 hash.
 
-##Command Line Examples:
+## Command Line Examples:
 Any arguments will be interpreted as strings. Each argument will be interpreted as a separate string to hash, and will be given its own output (in the order of input).
 ```
 $ make
