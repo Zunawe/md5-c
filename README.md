@@ -38,10 +38,10 @@ $ cat testFile | ./md5
 ```
 As seen above, it is important to note that many programs will output a newline character after their output. This newline *will* affect the output of the MD5 algorithm. `echo` has the `-n` flag that prevents the output of said character.
 
-If entering input by hand, end collection of data by entering an EOF character (Ctrl+D in some cases).
+If entering input by hand, end collection of data by entering an EOF character (`Ctrl+D` in some cases).
 
 ### Implementing into Code
-```
+```c
 #include "md5.h"
 
 ...
@@ -148,7 +148,7 @@ rotate_left(x, n) = (x << n) | (x >> (32 - n))
 The constants in K and S can be found at the bottom of this section.
 
 The message is split into blocks of 512 bits. Each block is split into 16 32-bit words. For each block, do the following:
-```
+```c
 AA = A;
 BB = B;
 CC = C;

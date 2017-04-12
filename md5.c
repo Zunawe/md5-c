@@ -1,3 +1,8 @@
+/*
+ * Derived from the RSA Data Security, Inc. MD5 Message-Digest Algorithm
+ * and modified slightly to be functionally identical but condensed into control structures.
+ */
+
 #include "md5.h"
 
 /*
