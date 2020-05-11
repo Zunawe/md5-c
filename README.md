@@ -80,7 +80,7 @@ The algorithm considers all words to be little-endian. I will also specify where
 The algorithm takes in an input of arbitrary length in bits. This can be a string, a file, a number, a struct, etc... It also doesn't need to be byte-aligned, though it almost always is. We'll call this input the message. The output is the digest.
 
 #### Step 1: Padding
-The provided message is padded by appending bits to the end until its length is congruent to `448 mod 512` bits. In other words, the message is padded so that its length is 64 bits less than the next multiple of 512. If the original message's length already meets this requirement before padding, it is still padded with 448 bits.
+The provided message is padded by appending bits to the end until its length is congruent to `448 mod 512` bits. In other words, the message is padded so that its length is 64 bits less than the next multiple of 512. If the original message's length already meets this requirement before padding, it is still padded with 512 bits.
 
 The padding is simply a single "1" bit at the end of the message followed by enough "0" bits to satisfy the length condition above.
 
