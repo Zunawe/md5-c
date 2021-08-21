@@ -1,9 +1,15 @@
 # MD5
 Takes an input string or file and outputs its MD5 hash.
 
+This repo is gaining a little more traffic than I expected, so I'll put this here as a little disclaimer. I wrote this code as a side project in college in an attempt to better understand the algorithm. I did verify the correctness of the output by comparing to other existing standalone programs. However, I did not research edge cases, set up automated testing, or attempt to run the program on any machine other than the laptop I had at the time, so here's the warning:
+
+This code may be generally correct, but you should consider it untested to be on the safe side. There may be edge cases, vulnerabilities, or optimizations I did not consider when I wrote this. My particular concern is that I didn't make considerations about endianness on machines other than mine (or run the code at all on machines other than mine).
+
+Knowing that, do feel free to use this code in any way you wish, no credit needed. And if you do find an problem, raise an issue.
+
 ## Command Line Examples:
 Any arguments will be interpreted as strings. Each argument will be interpreted as a separate string to hash, and will be given its own output (in the order of input).
-```
+```shell
 $ make
 
 $ ./md5 "Hello, World!"
@@ -20,7 +26,7 @@ $ ./md5 "Can use \" escapes"
 7bf94222f6dbcd25d6fa21d5985f5634
 ```
 If no arguments are given, input is taken from standard input.
-```
+```shell
 $ make
 
 $ echo -n "Hello, World!" | ./md5
@@ -207,7 +213,7 @@ e4d909c290d0fb1ca068ffaddf22cbd0
 ```
 
 #### Constants and Functions
-```
+```c
 A = 0x01234567
 B = 0x89abcdef
 C = 0xfedcba98
