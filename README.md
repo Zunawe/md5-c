@@ -1,7 +1,7 @@
 # MD5
 Takes an input string or file and outputs its MD5 hash.
 
-This repo is gaining a little more traffic than I expected, so I'll put this here as a little disclaimer. I wrote this code as a side project in college in an attempt to better understand the algorithm. I did verify the correctness of the output by comparing to other existing standalone programs. However, I did not research edge cases, set up automated testing, or attempt to run the program on any machine other than the laptop I had at the time, so here's the warning:
+This repo is gaining a little more traffic than I expected, so I'll put this here as a little disclaimer. I wrote this code as a side project in college in an attempt to better understand the algorithm. I consider this repository to be a reference implementation with a good step by step walkthrough of the algorithm, not necessarily code to be built upon. I did verify the correctness of the output by comparing to other existing standalone programs. However, I did not research edge cases, set up automated testing, or attempt to run the program on any machine other than the laptop I had at the time, so here's the warning:
 
 This code may be generally correct, but you should consider it untested to be on the safe side. There may be edge cases, vulnerabilities, or optimizations I did not consider when I wrote this. My particular concern is that I didn't make considerations about endianness on machines other than mine (or run the code at all on machines other than mine).
 
