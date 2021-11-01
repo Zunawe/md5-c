@@ -93,13 +93,13 @@ The padding is simply a single "1" bit at the end of the message followed by eno
 ##### Example
 Let's pass the string "Hello, world!" to the algorithm. Those characters converted to hexadecimal numbers look like this:
 ```
-48 65 6c 6f 2c 20 57 6f 72 6c 64 21
+48 65 6c 6c 6f 2c 20 77 6f 72 6c 64 21
 ```
 (Note: Strings are often null-terminated. This null character is not taken into account, as you will see.)
 
 Now we have to pad our message bits:
 ```
-0x 48 65 6c 6f 2c 20 57 6f 72 6c 64 21 80 00 00 00
+0x 48 65 6c 6c 6f 2c 20 77 6f 72 6c 64 21 80 00 00
 0x 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 0x 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 0x 00 00 00 00 00 00 00 00
@@ -110,9 +110,9 @@ Note the `0x80` right after the end of our message. We're writing a stream of bi
 Next, the length of the original message is appended to round out the length to a multiple of 512. The length is the number of *bits* in the original message modulus 2^64. The 64-bit number is split into two 32-bit pieces. The lower-order piece is written first in little-endian, and the higher-order pieces is written second in little-endian. Now the length in bits of the message is a multiple of 512.
 
 ##### Example
-The length of our message in bits is 96. The 64-bit representation of the number 96 in hexadecimal is `0x00000000 00000068`. So first we append the lower order bits of that number to our message:
+The length of our message in bits is 104. The 64-bit representation of the number 104 in hexadecimal is `0x00000000 00000068`. So first we append the lower order bits of that number to our message:
 ```
-0x 48 65 6c 6f 2c 20 57 6f 72 6c 64 21 80 00 00 00
+0x 48 65 6c 6c 6f 2c 20 77 6f 72 6c 64 21 80 00 00
 0x 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 0x 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 0x 00 00 00 00 00 00 00 00 68 00 00 00
@@ -120,7 +120,7 @@ The length of our message in bits is 96. The 64-bit representation of the number
 (We're writing in little-endian, so the lowest order byte is written first.)
 And then we append the higher-order bits:
 ```
-0x 48 65 6c 6f 2c 20 57 6f 72 6c 64 21 80 00 00 00
+0x 48 65 6c 6c 6f 2c 20 77 6f 72 6c 64 21 80 00 00
 0x 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 0x 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
 0x 00 00 00 00 00 00 00 00 68 00 00 00 00 00 00 00
