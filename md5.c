@@ -65,7 +65,6 @@ void md5Init(MD5Context *ctx){
  * If the input fills out a block of 512 bits, apply the algorithm (md5Step)
  * and save the result in the buffer. Also updates the overall size.
  */
-
 void md5Update(MD5Context *ctx, uint8_t *input_buffer, size_t input_len){
 	uint32_t input[16];
 	unsigned int offset = ctx->size % 64;
@@ -76,11 +75,14 @@ void md5Update(MD5Context *ctx, uint8_t *input_buffer, size_t input_len){
 		ctx->input[offset++] = (uint8_t)*(input_buffer + i);
 
 		// If we've filled our context input, copy it into our local array input
-		// then reset the offset to 0 and fill in a new buffer
-		// The local array input is a list of 16 32-bit words for use in the algorithm
+		// then reset the offset to 0 and fill in a new buffer.
+		// Every time we fill out a chunk, we run it through the algorithm
+		// to enable some back and forth between cpu and i/o
 		if(offset % 64 == 0){
 			for(unsigned int j = 0; j < 16; ++j){
 				// Convert to little-endian
+				// The local variable `input` our 512-bit chunk separated into 32-bit words
+				// we can use in calculations
 				input[j] = (uint32_t)(ctx->input[(j * 4) + 3]) << 24 |
 						   (uint32_t)(ctx->input[(j * 4) + 2]) << 16 |
 						   (uint32_t)(ctx->input[(j * 4) + 1]) <<  8 |
@@ -118,8 +120,7 @@ void md5Finalize(MD5Context *ctx){
 
 	md5Step(ctx->buffer, input);
 
-	// Move the result into digest
-	// (Convert from little-endian)
+	// Move the result into digest (convert from little-endian)
 	for(unsigned int i = 0; i < 4; ++i){
 		ctx->digest[(i * 4) + 0] = (uint8_t)((ctx->buffer[i] & 0x000000FF));
 		ctx->digest[(i * 4) + 1] = (uint8_t)((ctx->buffer[i] & 0x0000FF00) >>  8);
