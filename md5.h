@@ -23,7 +23,4 @@ uint32_t G(uint32_t X, uint32_t Y, uint32_t Z);
 uint32_t H(uint32_t X, uint32_t Y, uint32_t Z);
 uint32_t I(uint32_t X, uint32_t Y, uint32_t Z);
 
-uint32_t rotate_left(uint32_t x, uint32_t n);
-
-void print_bytes(void *p, size_t length);
-void print_hash(uint8_t *p);
+uint32_t rotateLeft(uint32_t x, uint32_t n);

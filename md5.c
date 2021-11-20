@@ -36,6 +36,14 @@ static uint32_t K[] = {0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
                        0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391};
 
 /*
+ * Bit-manipulation functions defined by the MD5 algorithm
+ */
+#define F(X, Y, Z) ((X & Y) | (~X & Z))
+#define G(X, Y, Z) ((X & Z) | (Y & ~Z))
+#define H(X, Y, Z) (X ^ Y ^ Z)
+#define I(X, Y, Z) (Y ^ (X | ~Z))
+
+/*
  * Padding used to make the size (in bits) of the input congruent to 448 mod 512
  */
 static uint8_t PADDING[] = {0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -165,7 +173,7 @@ void md5Step(uint32_t *buffer, uint32_t *input){
 		uint32_t temp = DD;
 		DD = CC;
 		CC = BB;
-		BB = BB + rotate_left(AA + E + K[i] + input[j], S[i]);
+		BB = BB + rotateLeft(AA + E + K[i] + input[j], S[i]);
 		AA = temp;
 	}
 
@@ -210,48 +218,8 @@ uint8_t* md5File(FILE *file){
 }
 
 /*
- * Bit-manipulation functions defined by the MD5 algorithm
- */
-uint32_t F(uint32_t X, uint32_t Y, uint32_t Z){
-	return (X & Y) | (~X & Z);
-}
-
-uint32_t G(uint32_t X, uint32_t Y, uint32_t Z){
-	return (X & Z) | (Y & ~Z);
-}
-
-uint32_t H(uint32_t X, uint32_t Y, uint32_t Z){
-	return X ^ Y ^ Z;
-}
-
-uint32_t I(uint32_t X, uint32_t Y, uint32_t Z){
-	return Y ^ (X | ~Z);
-}
-
-/*
  * Rotates a 32-bit word left by n bits
  */
-uint32_t rotate_left(uint32_t x, uint32_t n){
+uint32_t rotateLeft(uint32_t x, uint32_t n){
 	return (x << n) | (x >> (32 - n));
-}
-
-/*
- * Printing bytes from buffers or the hash
- */
-void print_bytes(void *p, size_t length){
-	uint8_t *pp = (uint8_t *)p;
-	for(unsigned int i = 0; i < length; ++i){
-		if(i && !(i % 16)){
-			printf("\n");
-		}
-		printf("%02X ", pp[i]);
-	}
-	printf("\n");
-}
-
-void print_hash(uint8_t *p){
-	for(unsigned int i = 0; i < 16; ++i){
-		printf("%02x", p[i]);
-	}
-	printf("\n");
 }
