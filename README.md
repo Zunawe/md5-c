@@ -119,21 +119,11 @@ Note the `0x80` right after the end of our message. We're writing a stream of bi
 
 #### Step 2: Appending the Length
 
-Next, the length of the original message is appended to round out the length to a multiple of 512. The length is the number of *bits* in the original message modulus 2^64. The 64-bit number is split into two 32-bit pieces. The lower-order piece is written first in little-endian, and the higher-order piece is written second in little-endian. Now the length of the whole message (in bits) is a multiple of 512.
+Next, the length of the message modulus 2^64 is appended in little endian to the message to round out the total length to a multiple of 512. This length is the number of *bits* in the original message, modulus 2^64. It's common to split this number into two 32-bit words, so keep careful track of which bytes are put where; the highest order byte should be the last byte in the message. This will round out the length of the whole message to a multiple of 512.
 
-##### Example
+##### Example 1
 
-The length of our message is 104 bits. The 64-bit representation of the number 104 in hexadecimal is `0x00000000 00000068`. So first we append the lower order bits of that number to our message:
-
-```
-0x 48 65 6c 6c 6f 2c 20 77 6f 72 6c 64 21 80 00 00
-0x 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-0x 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
-0x 00 00 00 00 00 00 00 00 68 00 00 00
-```
-
-(We're writing in little-endian, so the lowest order byte is written first.)
-And then we append the higher-order bits:
+The length of our message is 104 bits. The 64-bit representation of the number 104 in hexadecimal is `0x00000000 00000068`. So we'll append that number to the end.
 
 ```
 0x 48 65 6c 6c 6f 2c 20 77 6f 72 6c 64 21 80 00 00
@@ -142,7 +132,20 @@ And then we append the higher-order bits:
 0x 00 00 00 00 00 00 00 00 68 00 00 00 00 00 00 00
 ```
 
-(This is also little-endian, but all the bytes are the same.)
+(We're writing in little-endian, so the lowest order byte is written first.)
+
+If you're holding the length in two separate 32-bit words, make sure to append the lower order bytes first.
+
+##### Example 2
+
+Because our "Hello, world!" example is so small and doesn't give a length with more than two digits, let's say we have a different, bigger message of `0x12345678 90ABCDEF` bits and this chunk we're looking at is just the tail end that we have to pad out. The appended length would look like this:
+
+```
+0x 48 65 6c 6c 6f 2c 20 77 6f 72 6c 64 21 80 00 00
+0x 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00
+0x 00 00 00 00 00 00 00 00 EF CD AB 90 78 56 34 12
+```
 
 #### Step 3: Initializing the Buffer
 
@@ -157,7 +160,7 @@ D = 0x76543210
 
 #### Step 4: Processing
 
-There are four functions to be used to collapse three 32-bit words into one 32-bit word:
+There are four functions defined in the RSA memo that are used to collapse three 32-bit words into one 32-bit word:
 
 ```
 F(X, Y, Z) = (X & Y) | (~X & Z)
@@ -166,7 +169,7 @@ H(X, Y, Z) = X ^ Y ^ Z
 I(X, Y, Z) = Y ^ (X | ~Z)
 ```
 
-These are bitwise operations, but I will not describe their useful function. Only what they are and where to use them.
+These are bitwise operations.
 
 We also have to do a left rotate on the bits in a word. That is, shift the bits left, and move overflow to the right. Like spinning a bottle and seeing the label loop around. The function is defined as follows:
 
