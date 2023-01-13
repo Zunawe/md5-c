@@ -36,14 +36,6 @@ static uint32_t K[] = {0xd76aa478, 0xe8c7b756, 0x242070db, 0xc1bdceee,
                        0xf7537e82, 0xbd3af235, 0x2ad7d2bb, 0xeb86d391};
 
 /*
- * Bit-manipulation functions defined by the MD5 algorithm
- */
-#define F(X, Y, Z) ((X & Y) | (~X & Z))
-#define G(X, Y, Z) ((X & Z) | (Y & ~Z))
-#define H(X, Y, Z) (X ^ Y ^ Z)
-#define I(X, Y, Z) (Y ^ (X | ~Z))
-
-/*
  * Padding used to make the size (in bits) of the input congruent to 448 mod 512
  */
 static uint8_t PADDING[] = {0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
@@ -54,6 +46,22 @@ static uint8_t PADDING[] = {0x80, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
                             0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+
+/*
+ * Bit-manipulation functions defined by the MD5 algorithm
+ */
+#define F(X, Y, Z) ((X & Y) | (~X & Z))
+#define G(X, Y, Z) ((X & Z) | (Y & ~Z))
+#define H(X, Y, Z) (X ^ Y ^ Z)
+#define I(X, Y, Z) (Y ^ (X | ~Z))
+
+/*
+ * Rotates a 32-bit word left by n bits
+ */
+uint32_t rotateLeft(uint32_t x, uint32_t n){
+	return (x << n) | (x >> (32 - n));
+}
+
 
 /*
  * Initialize a context
@@ -215,11 +223,4 @@ uint8_t* md5File(FILE *file){
 	uint8_t *result = malloc(16);
 	memcpy(result, ctx.digest, 16);
 	return result;
-}
-
-/*
- * Rotates a 32-bit word left by n bits
- */
-uint32_t rotateLeft(uint32_t x, uint32_t n){
-	return (x << n) | (x >> (32 - n));
 }
