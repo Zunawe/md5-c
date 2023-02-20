@@ -18,11 +18,12 @@ If you want to include the md5 algorithm in your own code, you'll only need `md5
 ...
 
 void foo(){
-	uint8_t *result = md5String("Hello, World!");       // => 65a8e27d8879283831b664bd8b7f0ad4
+	uint8_t result[16];
+	md5String("Hello, World!", result);       // *result = 65a8e27d8879283831b664bd8b7f0ad4
 
 	FILE bar = fopen("bar.txt", "r");
-	result = md5File(bar);                              // Reads a file from a file pointer
-	result = md5File(stdin);                            // Can easily read from stdin
+	md5File(bar, result);                     // Reads a file from a file pointer
+	md5File(stdin, result);                   // Can easily read from stdin
 
 	// Manual use
 	..
@@ -39,7 +40,7 @@ void foo(){
 
 	md5Finalize(&ctx);
 
-	ctx.digest;                                        // => (Result of hashing (as uint8_t* with 16 bytes))
+	ctx.digest;                               // Result of hashing (as uint8_t* with 16 bytes)
 }
 ```
 

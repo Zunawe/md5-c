@@ -194,18 +194,16 @@ void md5Step(uint32_t *buffer, uint32_t *input){
 /*
  * Functions that will return a pointer to the hash of the provided input
  */
-uint8_t* md5String(char *input){
+void md5String(char *input, uint8_t *result){
 	MD5Context ctx;
 	md5Init(&ctx);
 	md5Update(&ctx, (uint8_t *)input, strlen(input));
 	md5Finalize(&ctx);
 
-	uint8_t *result = malloc(16);
 	memcpy(result, ctx.digest, 16);
-	return result;
 }
 
-uint8_t* md5File(FILE *file){
+void md5File(FILE *file, uint8_t *result){
 	char *input_buffer = malloc(1024);
 	size_t input_size = 0;
 
@@ -220,7 +218,5 @@ uint8_t* md5File(FILE *file){
 
 	free(input_buffer);
 
-	uint8_t *result = malloc(16);
 	memcpy(result, ctx.digest, 16);
-	return result;
 }
