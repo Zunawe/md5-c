@@ -18,29 +18,29 @@ If you want to include the md5 algorithm in your own code, you'll only need `md5
 ...
 
 void foo(){
-	uint8_t result[16];
-	md5String("Hello, World!", result);       // *result = 65a8e27d8879283831b664bd8b7f0ad4
+    uint8_t result[16];
+    md5String("Hello, World!", result);       // *result = 65a8e27d8879283831b664bd8b7f0ad4
 
-	FILE bar = fopen("bar.txt", "r");
-	md5File(bar, result);                     // Reads a file from a file pointer
-	md5File(stdin, result);                   // Can easily read from stdin
+    FILE bar = fopen("bar.txt", "r");
+    md5File(bar, result);                     // Reads a file from a file pointer
+    md5File(stdin, result);                   // Can easily read from stdin
 
-	// Manual use
-	..
-	MD5Context ctx;
-	md5Init(&ctx);
+    // Manual use
+    ..
+    MD5Context ctx;
+    md5Init(&ctx);
 
-	...
-	md5Update(&ctx, input1, input1_size);
-	...
-	md5Update(&ctx, input2, input2_size);
-	...
-	md5Update(&ctx, input3, input3_size);
-	...
+    ...
+    md5Update(&ctx, input1, input1_size);
+    ...
+    md5Update(&ctx, input2, input2_size);
+    ...
+    md5Update(&ctx, input3, input3_size);
+    ...
 
-	md5Finalize(&ctx);
+    md5Finalize(&ctx);
 
-	ctx.digest;                               // Result of hashing (as uint8_t* with 16 bytes)
+    ctx.digest;                               // Result of hashing (as uint8_t* with 16 bytes)
 }
 ```
 
@@ -189,28 +189,28 @@ CC = C;
 DD = D;
 
 for(i in 0 to 63){
-	if(0 <= i <= 15){
-		E = F(BB, CC, DD);
-		j = i;
-	}
-	else if(16 <= i <= 31){
-		E = G(BB, CC, DD);
-		j = ((i * 5) + 1) % 16;
-	}
-	else if(32 <= i <= 47){
-		E = H(BB, CC, DD);
-		j = ((i * 3) + 5) % 16;
-	}
-	else{
-		E = I(BB, CC, DD);
-		j = (i * 7) % 16;
-	}
+    if(0 <= i <= 15){
+        E = F(BB, CC, DD);
+        j = i;
+    }
+    else if(16 <= i <= 31){
+        E = G(BB, CC, DD);
+        j = ((i * 5) + 1) % 16;
+    }
+    else if(32 <= i <= 47){
+        E = H(BB, CC, DD);
+        j = ((i * 3) + 5) % 16;
+    }
+    else{
+        E = I(BB, CC, DD);
+        j = (i * 7) % 16;
+    }
 
-	temp = DD;
-	DD = CC;
-	CC = BB;
-	BB = BB + rotate_left(AA + E + K[i] + input[j], S[i]);
-	AA = temp;
+    temp = DD;
+    DD = CC;
+    CC = BB;
+    BB = BB + rotate_left(AA + E + K[i] + input[j], S[i]);
+    AA = temp;
 }
 
 A += AA;
