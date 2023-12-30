@@ -3,8 +3,6 @@
 
 #include <stdio.h>
 #include <stdint.h>
-#include <string.h>
-#include <stdlib.h>
 
 typedef struct{
     uint64_t size;        // Size of input in bytes
@@ -13,12 +11,20 @@ typedef struct{
     uint8_t digest[16];   // Result of algorithm
 }MD5Context;
 
-void md5Init(MD5Context *ctx);
-void md5Update(MD5Context *ctx, uint8_t *input, size_t input_len);
-void md5Finalize(MD5Context *ctx);
-void md5Step(uint32_t *buffer, uint32_t *input);
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-void md5String(char *input, uint8_t *result);
+void md5Init(MD5Context *ctx);
+void md5Update(MD5Context *ctx, const uint8_t *input, size_t input_len);
+void md5Finalize(MD5Context *ctx);
+void md5Step(uint32_t *buffer, const uint32_t *input);
+
+void md5String(const char *input, uint8_t *result);
 void md5File(FILE *file, uint8_t *result);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
