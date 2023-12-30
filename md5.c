@@ -5,6 +5,9 @@
 
 #include "md5.h"
 
+#include <stdlib.h>
+#include <string.h>
+
 /*
  * Constants defined by the MD5 algorithm
  */
